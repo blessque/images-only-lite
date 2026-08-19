@@ -5,8 +5,9 @@
 # A repository that stores the originals AND four sizes of each grows twice as fast as it
 # needs to, and Pages stops publishing at about a gigabyte.
 #
-# First run on a fresh fork: Settings -> Pages -> Source -> "GitHub Actions". Until that is
-# set, this workflow builds successfully and then fails on the deploy step.
+# `enablement: true` below turns Pages on for a fresh copy of this template, so nobody has
+# to find Settings -> Pages first. Learned the hard way: the very first run of this workflow
+# failed on exactly that, after a successful build.
 name: Publish
 
 on:
@@ -45,6 +46,8 @@ jobs:
         run: npm run gallery
 
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - uses: actions/upload-pages-artifact@v3
         with:
