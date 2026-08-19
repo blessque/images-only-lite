@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Photographs</title>
+    <meta name="description" content="A wall of photographs." />
+    <meta name="color-scheme" content="dark" />
+
+    <!--
+      `scripts/build-gallery.mjs` replaces this element's contents with the manifest after
+      the build. Inlining it collapses the load-JS -> fetch-manifest -> layout waterfall, so
+      the grid geometry is solvable from the first response and nothing shifts on screen.
+      Empty means the gallery has not been generated yet.
+    -->
+    <script type="application/json" id="manifest"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

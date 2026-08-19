@@ -1,0 +1,76 @@
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  height: var(--footer-height);
+  padding: 0 16px;
+  background: var(--bg);
+  border-top: 1px solid var(--grey-line);
+  font-size: 12px;
+  letter-spacing: 0.01em;
+  color: var(--grey-text);
+}
+
+.footer-copy {
+  white-space: nowrap;
+}
+
+.footer-contact {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.footer-lock {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--grey-lock);
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.footer-lock:hover,
+.footer-lock:focus-visible {
+  color: var(--grey-text-hover);
+}
+
+@media (max-width: 640px) {
+  .footer-contact {
+    display: none;
+  }
+}
+
+/* Admin: the two texts become inputs in place. They are the only copy on the site —
+   a settings panel would be more UI than content. */
+.footer.is-editing {
+  gap: 8px;
+}
+
+.footer-field {
+  flex: 0 1 200px;
+  min-width: 0;
+  padding: 4px 6px;
+  background: #0d0d0d;
+  border: 1px solid var(--grey-line);
+  color: var(--grey-text-hover);
+  font: inherit;
+  font-size: 12px;
+}
+
+.footer-field-wide {
+  flex: 1 1 260px;
+}
+
+.footer-field:focus {
+  outline: 1px solid #555;
+  outline-offset: -1px;
+}

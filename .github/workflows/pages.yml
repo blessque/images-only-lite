@@ -1,0 +1,54 @@
+---
+# Builds the gallery and publishes it to GitHub Pages on every push.
+#
+# Nothing here is committed back: the resized photographs live in the Pages artifact only.
+# A repository that stores the originals AND four sizes of each grows twice as fast as it
+# needs to, and Pages stops publishing at about a gigabyte.
+#
+# First run on a fresh fork: Settings -> Pages -> Source -> "GitHub Actions". Until that is
+# set, this workflow builds successfully and then fails on the deploy step.
+name: Publish
+
+on:
+  push:
+    branches: [main]
+  # So you can republish without pushing — useful after enabling Pages for the first time.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One publish at a time; do not cancel a running one, or a half-finished deploy wins.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build the page, then the photographs
+        run: npm run gallery
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - id: deploy
+        uses: actions/deploy-pages@v4
