@@ -6,7 +6,10 @@ gaps, no captions, no navigation. Put your pictures in a folder, push, and it is
 Free to host — it runs on GitHub Pages, with no server, no database and no account anywhere
 else.
 
-**[See it running](https://blessque.github.io/images-only-lite/)**
+**[See the template's own gallery](https://blessque.github.io/images-only-lite/)** — that
+link stays pointed at the original wherever this README gets copied to. **Yours** will be at
+`https://<your-username>.github.io/<your-repo>/`; the finished Actions run links straight to
+it, and it is also printed in **Settings → Pages**.
 
 ## What makes it not just a grid
 
