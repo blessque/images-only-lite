@@ -40,17 +40,25 @@ jobs:
     steps:
       # FIRST, before anything slow. Without this the build runs in full and only then
       # fails inside configure-pages with an API error that explains nothing.
-      - name: Check that Pages is switched on
+      - name: Check that Pages is on, and set to GitHub Actions
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          code=$(curl -s -o /dev/null -w '%{http_code}' \
-            -H "Authorization: Bearer ${{ github.token }}" \
-            -H "Accept: application/vnd.github+json" \
-            "${{ github.api_url }}/repos/${{ github.repository }}/pages")
-          if [ "$code" = "404" ]; then
-            echo "::error title=Turn on GitHub Pages::Go to Settings -> Pages, set Source to 'GitHub Actions', then re-run this workflow. It is a one-time step and this workflow cannot do it for you."
-            exit 1
-          fi
-          echo "Pages is on (HTTP $code)."
+          # Two ways to get this wrong, and the second one LOOKS like it worked. "Deploy from
+          # a branch" is the default choice in that dropdown, and it publishes the repository
+          # files as they are -- so you get a blank page serving index.html with a
+          # `/src/main.tsx` in it, and no clue why. Both states are named here.
+          build_type=$(gh api "repos/$GITHUB_REPOSITORY/pages" --jq '.build_type' 2>/dev/null || echo none)
+          case "$build_type" in
+            workflow)
+              echo "Pages is on and builds from Actions." ;;
+            none)
+              echo "::error title=Turn on GitHub Pages::Go to Settings -> Pages and set Source to 'GitHub Actions', then re-run this workflow. It is a one-time step and this workflow is not allowed to do it for you."
+              exit 1 ;;
+            *)
+              echo "::error title=Change the Pages source to GitHub Actions::Pages is set to deploy from a branch, so it publishes the repository files instead of the built gallery -- which shows up as a blank page. Go to Settings -> Pages, change Source from 'Deploy from a branch' to 'GitHub Actions', then re-run this workflow."
+              exit 1 ;;
+          esac
 
       - uses: actions/checkout@v4
 

@@ -26,6 +26,11 @@ arrives. Measured on a real build: **CLS 0.00000**.
 1. Press **Use this template → Create a new repository**.
 2. In your new repository, go to **Settings → Pages** and set **Source** to
    **GitHub Actions**. Once, and never again.
+
+   > Not "Deploy from a branch" — that is the option the dropdown offers first, and it
+   > publishes your repository files instead of your gallery, which comes out as a blank
+   > page. If you pick it by mistake the workflow will stop and tell you.
+
 3. Put your photographs in `photos/` (delete the samples), edit `site.txt`, and commit.
 4. Wait for the green tick on the Actions tab. Your gallery is at
    `https://<your-username>.github.io/<your-repo>/`.
