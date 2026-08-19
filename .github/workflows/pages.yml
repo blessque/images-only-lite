@@ -5,9 +5,14 @@
 # A repository that stores the originals AND four sizes of each grows twice as fast as it
 # needs to, and Pages stops publishing at about a gigabyte.
 #
-# `enablement: true` below turns Pages on for a fresh copy of this template, so nobody has
-# to find Settings -> Pages first. Learned the hard way: the very first run of this workflow
-# failed on exactly that, after a successful build.
+# ONE manual step is needed once per repository, and it cannot be automated away:
+# Settings -> Pages -> Source -> "GitHub Actions".
+#
+# `enablement: true` on configure-pages is supposed to do it for you and does not: creating a
+# Pages site is not something the built-in GITHUB_TOKEN is allowed to do, whatever the
+# workflow permissions say, and it fails with "Resource not accessible by integration".
+# See actions/configure-pages#40. So the first step below checks instead, and says what to
+# do in words rather than leaving you with that error.
 name: Publish
 
 on:
@@ -33,6 +38,20 @@ jobs:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
     steps:
+      # FIRST, before anything slow. Without this the build runs in full and only then
+      # fails inside configure-pages with an API error that explains nothing.
+      - name: Check that Pages is switched on
+        run: |
+          code=$(curl -s -o /dev/null -w '%{http_code}' \
+            -H "Authorization: Bearer ${{ github.token }}" \
+            -H "Accept: application/vnd.github+json" \
+            "${{ github.api_url }}/repos/${{ github.repository }}/pages")
+          if [ "$code" = "404" ]; then
+            echo "::error title=Turn on GitHub Pages::Go to Settings -> Pages, set Source to 'GitHub Actions', then re-run this workflow. It is a one-time step and this workflow cannot do it for you."
+            exit 1
+          fi
+          echo "Pages is on (HTTP $code)."
+
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
@@ -46,8 +65,6 @@ jobs:
         run: npm run gallery
 
       - uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - uses: actions/upload-pages-artifact@v3
         with:

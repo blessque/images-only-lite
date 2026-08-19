@@ -21,13 +21,15 @@ arrives. Measured on a real build: **CLS 0.00000**.
 ## Use it
 
 1. Press **Use this template → Create a new repository**.
-2. Put your photographs in `photos/` (delete the samples), edit `site.txt`, and commit.
-3. Wait for the green tick on the Actions tab. Your gallery is at
+2. In your new repository, go to **Settings → Pages** and set **Source** to
+   **GitHub Actions**. Once, and never again.
+3. Put your photographs in `photos/` (delete the samples), edit `site.txt`, and commit.
+4. Wait for the green tick on the Actions tab. Your gallery is at
    `https://<your-username>.github.io/<your-repo>/`.
 
-Publishing switches itself on the first time the workflow runs. If your account or
-organisation does not allow that, turn it on by hand once — **Settings → Pages → Source →
-GitHub Actions** — and re-run the workflow.
+Step 2 really is necessary and no workflow can do it for you — creating a Pages site is not
+something GitHub lets a workflow's own token do. If you skip it, the first run stops in a few
+seconds and tells you so, rather than building everything and then failing.
 
 You never need to install anything or open a terminal. Adding a photograph later is the
 same thing: drop the file into `photos/` on github.com and commit.
